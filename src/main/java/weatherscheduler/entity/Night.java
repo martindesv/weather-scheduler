@@ -1,29 +1,20 @@
 package weatherscheduler.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
+import java.util.List;
+
 @Entity
-@XmlRootElement(name = "place")
-public class Place {
+@XmlRootElement(name = "night")
+public class Night {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    private Night night;
-
-    @ManyToOne
-    private Day day;
-
-    @Column
-    @XmlElement
-    private String name;
 
     @XmlElement
     private String phenomenon;
@@ -33,4 +24,11 @@ public class Place {
 
     @XmlElement
     private Integer tempmax;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "night")
+    @XmlElement(name = "place")
+    private List<Place> places;
+
+    @ManyToOne
+    private Forecast forecast;
 }

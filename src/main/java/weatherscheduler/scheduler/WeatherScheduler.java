@@ -17,6 +17,6 @@ public class WeatherScheduler {
 
     @Scheduled(fixedRate = 60000)
     public void scheduleWeatherDataFetch() {
-        weatherService.fetchAndProcessWeatherData();
+        weatherService.fetchAndSaveWeatherData();
     }
 }
