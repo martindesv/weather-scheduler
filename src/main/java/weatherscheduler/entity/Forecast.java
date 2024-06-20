@@ -11,4 +11,8 @@ public class Forecast {
     private Long id;
 
     private LocalDate date;
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
 }

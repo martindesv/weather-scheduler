@@ -5,9 +5,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.util.List;
 
-@XmlRootElement(name = "day")
-public class Day {
+@XmlRootElement(name = "night")
+public class NightXml {
 
     @XmlElement(name = "place")
-    private List<Place> place;
+    private List<PlaceXml> place;
 }

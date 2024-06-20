@@ -4,7 +4,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "place")
-public class Place {
+public class PlaceXml {
 
     @XmlElement
     private String name;

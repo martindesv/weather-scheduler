@@ -3,7 +3,10 @@ package weatherscheduler.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import weatherscheduler.entity.Forecast;
 import weatherscheduler.xmlElement.*;
+
+import java.time.LocalDate;
 
 @Service
 public class WeatherService {
@@ -14,6 +17,10 @@ public class WeatherService {
     private RestTemplate restTemplate;
 
     public void fetchAndSaveWeatherData() {
-        Forecasts forecasts = restTemplate.getForObject(WEATHER_API_URL, Forecasts.class);
+        ForecastsXml forecastsXml = restTemplate.getForObject(WEATHER_API_URL, ForecastsXml.class);
+        ForecastXml forecastXml = forecastsXml.getForecast().get(0);
+
+        Forecast forecast = new Forecast();
+        forecast.setDate(LocalDate.parse(forecastXml.getDate()));
     }
 }

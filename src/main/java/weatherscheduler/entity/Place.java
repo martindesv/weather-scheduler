@@ -16,7 +16,9 @@ public class Place {
 
     private String name;
 
-    private String phenomenon;
+    private String phenomenonNight;
+
+    private String phenomenonDay;
 
     private Integer tempmin;
 
