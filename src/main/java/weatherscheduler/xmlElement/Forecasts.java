@@ -1,4 +1,4 @@
-package weatherscheduler.entity;
+package weatherscheduler.xmlElement;
 
 
 import jakarta.xml.bind.annotation.XmlElement;

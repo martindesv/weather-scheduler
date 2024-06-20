@@ -3,9 +3,7 @@ package weatherscheduler.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import weatherscheduler.entity.*;
-import weatherscheduler.repository.ForecastRepository;
-import weatherscheduler.repository.PlaceRepository;
+import weatherscheduler.xmlElement.*;
 
 @Service
 public class WeatherService {
@@ -14,12 +12,6 @@ public class WeatherService {
 
     @Autowired
     private RestTemplate restTemplate;
-
-    @Autowired
-    private ForecastRepository forecastRepository;
-
-    @Autowired
-    private PlaceRepository placeRepository;
 
     public void fetchAndSaveWeatherData() {
         Forecasts forecasts = restTemplate.getForObject(WEATHER_API_URL, Forecasts.class);
