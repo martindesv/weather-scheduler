@@ -8,7 +8,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class Forecast {
 
     @XmlAttribute(name = "date")
-    private String dateString;
+    private String date;
 
     @XmlElement
     private Night night;
