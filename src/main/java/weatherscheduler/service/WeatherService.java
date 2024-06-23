@@ -2,14 +2,17 @@ package weatherscheduler.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import weatherscheduler.entity.Forecast;
 import weatherscheduler.entity.Place;
+import weatherscheduler.repository.PlaceRepository;
 import weatherscheduler.xmlElement.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import weatherscheduler.repository.ForecastRepository;
 
@@ -24,6 +27,10 @@ public class WeatherService {
     @Autowired
     private ForecastRepository forecastRepository;
 
+    @Autowired
+    private PlaceRepository placeRepository;
+
+    @Transactional
     public void fetchAndSaveWeatherData() {
         ForecastsXml forecastsXml;
         try {
@@ -42,13 +49,21 @@ public class WeatherService {
         nightDayPlaces.addAll(dayPlaces);
         nightDayPlaces.addAll(nightPlaces);
 
-        List<PlaceXml> mergedPlaces = mergePlaceLists(nightDayPlaces);
+        List<PlaceXml> mergedXmlPlaces = mergePlaceLists(nightDayPlaces);
 
-        Forecast forecast = getForecast(forecastXml, mergedPlaces);
-        forecastRepository.save(forecast);
+        // Check if a forecast already exists
+        Optional<Forecast> existingForecastOptional = forecastRepository.findFirst();
+
+        if (existingForecastOptional.isPresent()) {
+            Forecast existingForecast = existingForecastOptional.get();
+            placeRepository.deleteAll(existingForecast.getPlace());
+            forecastRepository.delete(existingForecastOptional.get());
+        }
+        Forecast newForecast = createNewForecast(forecastXml, mergedXmlPlaces);
+        forecastRepository.save(newForecast);
     }
 
-    private static Forecast getForecast(ForecastXml forecastXml, List<PlaceXml> mergedPlaces) {
+    private static Forecast createNewForecast(ForecastXml forecastXml, List<PlaceXml> mergedPlaces) {
         Forecast forecast = new Forecast();
         forecast.setDate(LocalDate.parse(forecastXml.getDate()));
 

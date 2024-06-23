@@ -23,4 +23,8 @@ public class Forecast {
     public void setPlace(List<Place> place) {
         this.place = place;
     }
+
+    public List<Place> getPlace() {
+        return place;
+    }
 }
