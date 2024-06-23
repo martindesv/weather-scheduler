@@ -10,4 +10,8 @@ public class NightXml {
 
     @XmlElement(name = "place")
     private List<PlaceXml> place;
+
+    public List<PlaceXml> getPlace() {
+        return place;
+    }
 }

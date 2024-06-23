@@ -15,7 +15,7 @@ public class WeatherScheduler {
         this.weatherService = weatherService;
     }
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 60000 * 3)
     public void scheduleWeatherDataFetch() {
         weatherService.fetchAndSaveWeatherData();
     }
