@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-import weatherscheduler.entity.Forecast;
 import weatherscheduler.entity.Place;
 import weatherscheduler.repository.PlaceRepository;
 import weatherscheduler.xmlElement.*;
@@ -14,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import weatherscheduler.repository.ForecastRepository;
 
 @Service
 public class WeatherService {
@@ -23,9 +21,6 @@ public class WeatherService {
 
     @Autowired
     private RestTemplate restTemplate;
-    
-    @Autowired
-    private ForecastRepository forecastRepository;
 
     @Autowired
     private PlaceRepository placeRepository;
@@ -52,21 +47,16 @@ public class WeatherService {
         List<PlaceXml> mergedXmlPlaces = mergePlaceLists(nightDayPlaces);
 
         // Check if a forecast already exists
-        Optional<Forecast> existingForecastOptional = forecastRepository.findFirst();
+        Optional<Place> existingForecastOptional = placeRepository.findFirst();
 
         if (existingForecastOptional.isPresent()) {
-            Forecast existingForecast = existingForecastOptional.get();
-            placeRepository.deleteAll(existingForecast.getPlace());
-            forecastRepository.delete(existingForecastOptional.get());
+            placeRepository.deleteAll();
         }
-        Forecast newForecast = createNewForecast(forecastXml, mergedXmlPlaces);
-        forecastRepository.save(newForecast);
+        List<Place> newPlaces = createNewPlaces(forecastXml, mergedXmlPlaces);
+        placeRepository.saveAll(newPlaces);
     }
 
-    private static Forecast createNewForecast(ForecastXml forecastXml, List<PlaceXml> mergedPlaces) {
-        Forecast forecast = new Forecast();
-        forecast.setDate(LocalDate.parse(forecastXml.getDate()));
-
+    private static List<Place> createNewPlaces(ForecastXml forecastXml, List<PlaceXml> mergedPlaces) {
         List<Place> places = new ArrayList<>();
         for (PlaceXml mergedPlaceXml : mergedPlaces) {
             Place placeEntity = new Place();
@@ -75,13 +65,11 @@ public class WeatherService {
             placeEntity.setTempmin(mergedPlaceXml.getTempmin());
             placeEntity.setPhenomenonDay(mergedPlaceXml.getPhenomenonDay());
             placeEntity.setPhenomenonNight(mergedPlaceXml.getPhenomenonNight());
-            placeEntity.setForecast(forecast);
+            placeEntity.setDate(LocalDate.parse(forecastXml.getDate()));
             places.add(placeEntity);
         }
 
-
-        forecast.setPlace(places);
-        return forecast;
+        return places;
     }
 
     public static List<PlaceXml> mergePlaceLists(List<PlaceXml> places) {
