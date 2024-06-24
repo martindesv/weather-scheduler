@@ -9,6 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface PlaceRepository extends JpaRepository<Place, Long> {
-    @Query("SELECT p FROM Place p ORDER BY p.date DESC")
+    @Query("SELECT p FROM Place p ORDER BY p.date DESC limit 1")
     Optional<Place> findFirst();
 }

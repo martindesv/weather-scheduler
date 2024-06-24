@@ -46,10 +46,10 @@ public class WeatherService {
 
         List<PlaceXml> mergedXmlPlaces = mergePlaceLists(nightDayPlaces);
 
-        // Check if a forecast already exists
-        Optional<Place> existingForecastOptional = placeRepository.findFirst();
+        // Check if places already exist
+        Optional<Place> existingPlaceOptional = placeRepository.findFirst();
 
-        if (existingForecastOptional.isPresent()) {
+        if (existingPlaceOptional.isPresent()) {
             placeRepository.deleteAll();
         }
         List<Place> newPlaces = createNewPlaces(forecastXml, mergedXmlPlaces);
