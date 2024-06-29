@@ -1,5 +1,6 @@
 package weatherscheduler.scheduler;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,7 @@ public class WeatherScheduler {
         this.weatherService = weatherService;
     }
 
-    @Scheduled(fixedRate = 60000 * 3)
+    @Scheduled(fixedRateString = "${scheduler.fixedRate}")
     public void scheduleWeatherDataFetch() {
         weatherService.fetchAndSaveWeatherData();
     }

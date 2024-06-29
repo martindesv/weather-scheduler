@@ -1,6 +1,7 @@
 package weatherscheduler.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -17,18 +18,24 @@ import java.util.stream.Collectors;
 @Service
 public class WeatherService {
 
-    private static final String WEATHER_API_URL = "https://www.ilmateenistus.ee/ilma_andmed/xml/forecast.php?lang=eng";
+    @Value("${scheduler.url}")
+    private String WEATHER_API_URL;
+
+    private final RestTemplate restTemplate;
+
+    private final PlaceRepository placeRepository;
 
     @Autowired
-    private RestTemplate restTemplate;
-
-    @Autowired
-    private PlaceRepository placeRepository;
+    public WeatherService(RestTemplate restTemplate, PlaceRepository placeRepository) {
+        this.restTemplate = restTemplate;
+        this.placeRepository = placeRepository;
+    }
 
     @Transactional
     public void fetchAndSaveWeatherData() {
         ForecastsXml forecastsXml;
         try {
+            System.out.println("Fetching weather data...");
             forecastsXml = restTemplate.getForObject(WEATHER_API_URL, ForecastsXml.class);
         } catch (Exception e) {
             e.printStackTrace();
