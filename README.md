@@ -1,6 +1,12 @@
 # Weather Scheduler
 
-psql -U postgres
-CREATE DATABASE weather;
-CREATE USER weather WITH PASSWORD 'weather';
-GRANT ALL PRIVILEGES ON DATABASE weather TO weather;
+Scheduler application to fetch weather data from weather API and save results into database.
+
+To build and run using Gradle:
+
+
+```
+./gradlew build
+
+./gradlew bootRun
+```
